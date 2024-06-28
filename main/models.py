@@ -5,7 +5,6 @@ class CustomUser(models.Model):
     fullname = models.CharField(max_length=100)
     username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(max_length=100)
-    password = models.CharField(max_length=100)
     school_class = models.CharField(max_length=100)
     account_balance = models.FloatField(default=0.0)
     account_type = models.CharField(max_length=100, default="Student")

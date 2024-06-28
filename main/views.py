@@ -8,9 +8,13 @@ from main.forms import PostForm, CustomRegisterForm, CustomAuthenticationForm
 def signup_view(request):
     if request.method == 'POST':
         form = CustomRegisterForm(request.POST)
+        print(request.POST)  # Add this line
         if form.is_valid():
             form.save()
             return redirect('profile')
+        else:
+            print(form.errors)
+            return render(request, 'signup.html', {'form': form})
     else:
         form = CustomRegisterForm()
         return render(request, 'signup.html', {'form': form})

@@ -9,9 +9,12 @@ class CustomRegisterForm(UserCreationForm):
     fullname = forms.CharField(max_length=100)
     school_class = forms.CharField(max_length=100)
     username = forms.CharField(max_length=100)
+    password1 = forms.CharField(label='Password', widget=forms.PasswordInput)
+    password2 = forms.CharField(label='Confirm Password', widget=forms.PasswordInput)
+
     class Meta:
         model = CustomUser
-        fields = ('fullname', 'username', 'email', 'password', 'school_class')
+        fields = ('fullname', 'username', 'email', 'school_class')
 
 class CustomAuthenticationForm(forms.Form):
     class Meta:
