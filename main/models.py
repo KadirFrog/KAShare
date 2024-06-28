@@ -1,3 +1,4 @@
+from django.contrib.auth.hashers import make_password
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -13,6 +14,10 @@ class CustomUser(models.Model):
     is_anonymous = False
     is_authenticated = True
     is_active = True
+
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+        self._password = raw_password
 
 CustomUser: CustomUser = get_user_model()
 
