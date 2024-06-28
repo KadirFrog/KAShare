@@ -1,0 +1,19 @@
+{% load static %}
+<link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+
+<center>
+<form method="post">
+  <h2>Log in at <bold>KAShare</bold></h2>
+  {% csrf_token %}
+  {{ form.username.label_tag }}
+  {{ form.username }}
+  <br><br>
+  {{ form.password.label_tag }}
+  {{ form.password }}
+  <br><br>
+  <button type="submit" class="box-button">Log in</button>
+</form>
+
+  <br>
+  <p>Don't have an account yet? <a href="{% url 'sign_up' %}">Create an account</a></p>
+</center>

@@ -1,0 +1,29 @@
+{% load static %}
+
+<link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+
+<center>
+<form method="post">
+  <h2>Sign up at <bold>KAShare</bold></h2>
+  {% csrf_token %}
+  {{ form.fullname.label_tag }}
+  {{ form.fullname }}
+  <br><br>
+  {{ form.username.label_tag }}
+  {{ form.username }}
+  <br><br>
+  {{ form.email.label_tag }}
+  {{ form.email }}
+  <br><br>
+  {{ form.password.label_tag }}
+  {{ form.password }}
+  <br><br>
+  {{ form.school_class.label_tag }}
+  {{ form.school_class }}
+  <br><br>
+  <button type="submit" class="box-button">Sign up</button>
+</form>
+
+  <br>
+  <p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+</center>
