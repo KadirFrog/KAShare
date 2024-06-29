@@ -1,0 +1,142 @@
+<!-- header.html -->
+<header>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+	    body {
+		    margin: 0;
+	    }
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            background-color: #111;
+        }
+       form {
+        /* Center the form */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        /* Add some margin */
+        margin: 50px;
+    }
+
+    label {
+        /* Change the font size */
+        font-size: 20px;
+        /* Add some margin */
+        margin: 5px;
+    }
+
+    input[type="text"], input[type="date"], input[type="password"], input[type="email"] {
+        /* Change the font size */
+        font-size: 18px;
+        /* Add some padding */
+        padding: 10px;
+        /* Add some margin */
+        margin: 5px;
+        /* Change the border */
+        border: 1px solid #ddd;
+        /* Change the border radius */
+        border-radius: 5px;
+    }
+
+    input[type="submit"], button[type="submit"] {
+        /* Change the background color */
+        background-color: #4CAF50; /* Green */
+        /* Change the border */
+        border: none;
+        /* Change the color */
+        color: white;
+        /* Add some padding */
+        padding: 15px 32px;
+        /* Add some text styling */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        /* Add some transition for hover effect */
+        transition-duration: 0.4s;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover, button[type="submit"]:hover {
+        background-color: #45a049;
+    }
+     input[type="file"] {
+        /* Hide the default file input */
+       background-color: #4CAF50; /* Green */
+        /* Change the border */
+        border: none;
+        /* Change the color */
+        color: white;
+        /* Add some padding */
+        padding: 15px 32px;
+        /* Add some text styling */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        /* Add some transition for hover effect */
+        transition-duration: 0.4s;
+        cursor: pointer;
+	     --button-bg: #4CAF50;
+    }
+
+    /* Style the label */
+    label[for="file"] {
+        /* Change the background color */
+        background-color: #4CAF50; /* Green */
+        /* Change the border */
+        border: none;
+        /* Change the color */
+        color: white;
+        /* Add some padding */
+        padding: 15px 32px;
+        /* Add some text styling */
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+        /* Add some transition for hover effect */
+        transition-duration: 0.4s;
+        cursor: pointer;
+    }
+
+    label[for="file"]:hover {
+        background-color: #45a049;
+    }
+    </style>
+    <nav>
+        <ul>
+	        {% if user.is_authenticated %}
+            <li><a href="{% url 'home' %}">Home</a></li>
+            <li><a href="{% url 'profile' %}">Profile</a></li>
+            <li><a href="{% url 'recent_posts' %}">Recent Posts</a></li>
+            <li><a href="{% url 'post' %}">Post</a></li>
+	        <li><a href="{% url 'logout' %}">Logout</a></li>
+	        {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'sign_up' %}">Sign Up</a></li>
+	        {% endif %}
+        </ul>
+    </nav>
+</header>
