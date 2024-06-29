@@ -2,25 +2,93 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
-    <link href='https://fullcalendar.io/releases/main/core/main.css' rel='stylesheet' />
-    <link href='https://fullcalendar.io/releases/main/daygrid/main.css' rel='stylesheet' />
-    <script src='https://fullcalendar.io/releases/main/core/main.js'></script>
-    <script src='https://fullcalendar.io/releases/main/daygrid/main.js'></script>
-    <script src='https://fullcalendar.io/releases/main/interaction/main.js'></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Calendar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-gap: 5px;
+            max-width: 600px;
+            margin: auto;
+        }
+        .day, .header {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        .header {
+            background-color: #f0f0f0;
+        }
+        .event {
+            background-color: #ffeb3b;
+            margin-top: 5px;
+            padding: 2px;
+            font-size: 0.8em;
+        }
+    </style>
 </head>
 <body>
-    <h2>Home</h2>
-    <div id='calendar'></div>
+    <h1 style="text-align: center;">Simple Calendar</h1>
+    <div class="calendar" id="calendar"></div>
+
     <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            plugins: [ 'dayGrid', 'interaction' ],
-            events: {{ events|safe }},
-        });
-        calendar.render();
-    });
+        // Sample data for events. This should be replaced by Django's context data.
+        const events = JSON.parse('{{ events|escapejs }}');
+
+        function generateCalendar(year, month) {
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const firstDay = new Date(year, month, 1).getDay();
+
+            const headers = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            headers.forEach(day => {
+                const header = document.createElement('div');
+                header.className = 'header';
+                header.innerText = day;
+                calendar.appendChild(header);
+            });
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyCell = document.createElement('div');
+                emptyCell.className = 'day';
+                calendar.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const cell = document.createElement('div');
+                cell.className = 'day';
+                cell.innerText = day;
+
+                const eventDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                events.forEach(event => {
+                    if (event.event_date === eventDate) {
+                        const eventDiv = document.createElement('div');
+                        eventDiv.className = 'event';
+                        eventDiv.innerText = event.event_title;
+                        cell.appendChild(eventDiv);
+                    }
+                });
+
+                calendar.appendChild(cell);
+            }
+        }
+
+        const today = new Date();
+        generateCalendar(today.getFullYear(), today.getMonth());
     </script>
 </body>
+<form method="POST" action="{% url 'create_classtest' %}">
+    {% csrf_token %}
+    <label for="test_name">Test Name:</label><br>
+    <input type="text" id="test_name" name="test_name"><br>
+    <label for="test_date">Test Date:</label><br>
+    <input type="date" id="test_date" name="test_date"><br>
+    <input type="submit" value="Create ClassTest">
+</form>
 </html>

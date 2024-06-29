@@ -15,4 +15,5 @@ urlpatterns = [path("post", views.post, name="post"),
                path("recent_posts", views.recent_posts, name="recent_posts"),
                path("post/<int:post_id>", views.post_detail, name="post_detail"),
                path("post/<int:post_id>/like", views.like_post, name="like_post"),
+               path('create_classtest/', views.create_classtest, name='create_classtest'),
                ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

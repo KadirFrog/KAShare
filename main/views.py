@@ -3,6 +3,8 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
+from django.utils.dateformat import DateFormat
+from django.views.decorators.http import require_POST
 
 from main.forms import PostForm, CustomRegisterForm, CustomAuthenticationForm, ClassTestForm
 from main.models import Post, ClassTest
@@ -73,17 +75,21 @@ def like_post(request, post_id):
 
 @login_required
 def home(request):
-    if request.method == 'POST':
-        data = json.loads(request.body)
-        form = ClassTestForm(data)
-        if form.is_valid():
-            classtest = form.save(commit=False)
-            classtest.related_class = request.user
-            classtest.save()
-            return JsonResponse({'status': 'ok'})
-        else:
-            return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
-    else:
-        classtests = ClassTest.objects.filter(related_class=request.user)
-        events = [{'title': test.test_name, 'start': test.test_date.strftime('%Y-%m-%d')} for test in classtests]
-        return render(request, 'home.html', {'events': json.dumps(events)})
+    events = ClassTest.objects.all()
+    formatted_events = [
+        {"event_date": DateFormat(event.test_date).format('Y-m-d'), "event_title": event.test_name}
+        for event in events
+    ]
+    form = ClassTestForm()
+    return render(request, 'home.html', {"events": json.dumps(formatted_events), "form": form})
+
+@login_required
+@require_POST
+def create_classtest(request):
+    form = ClassTestForm(request.POST)
+    if form.is_valid():
+        classtest = form.save(commit=False)
+        classtest.related_class_id = request.user.id
+        classtest.save()
+    return redirect('home')
+
