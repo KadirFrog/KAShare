@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
 from main.forms import PostForm, CustomRegisterForm, CustomAuthenticationForm
+from main.models import Post
 
 
 def signup_view(request):
@@ -27,7 +28,7 @@ def login_view(request):
             return redirect('profile')
     else:
         form = CustomAuthenticationForm()
-    return render(request, 'login.html', {'form': form, "errors": form.errors})
+    return render(request, 'login.html', {'form': form, "errors": form.errors, "logout": False})
 @login_required
 def post(request):
     if request.method == 'POST':
@@ -49,4 +50,15 @@ def profile(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('login')
+    return redirect('login', {"logout": True})
+
+
+@login_required
+def recent_posts(request):
+    posts = Post.objects.all().order_by('-date_posted')
+    return render(request, 'recent_posts.html', {'posts': posts})
+
+@login_required
+def post_detail(request, post_id):
+    post = Post.objects.get(id=post_id)
+    return render(request, 'post_detail.html', {'post': post})
