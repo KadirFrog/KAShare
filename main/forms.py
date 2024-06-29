@@ -22,3 +22,8 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'image']
+
+class ClassTestForm(forms.ModelForm):
+    class Meta:
+        model = ClassTest
+        fields = ['test_name', 'test_date']

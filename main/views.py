@@ -1,9 +1,11 @@
+import json
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 
-from main.forms import PostForm, CustomRegisterForm, CustomAuthenticationForm
-from main.models import Post
+from main.forms import PostForm, CustomRegisterForm, CustomAuthenticationForm, ClassTestForm
+from main.models import Post, ClassTest
 
 
 def signup_view(request):
@@ -68,3 +70,20 @@ def like_post(request, post_id):
     post = Post.objects.get(id=post_id)
     post.like_post(request.user)
     return redirect('recent_posts')
+
+@login_required
+def home(request):
+    if request.method == 'POST':
+        data = json.loads(request.body)
+        form = ClassTestForm(data)
+        if form.is_valid():
+            classtest = form.save(commit=False)
+            classtest.related_class = request.user
+            classtest.save()
+            return JsonResponse({'status': 'ok'})
+        else:
+            return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
+    else:
+        classtests = ClassTest.objects.filter(related_class=request.user)
+        events = [{'title': test.test_name, 'start': test.test_date.strftime('%Y-%m-%d')} for test in classtests]
+        return render(request, 'home.html', {'events': json.dumps(events)})

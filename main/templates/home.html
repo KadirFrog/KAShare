@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link href='https://fullcalendar.io/releases/main/core/main.css' rel='stylesheet' />
+    <link href='https://fullcalendar.io/releases/main/daygrid/main.css' rel='stylesheet' />
+    <script src='https://fullcalendar.io/releases/main/core/main.js'></script>
+    <script src='https://fullcalendar.io/releases/main/daygrid/main.js'></script>
+    <script src='https://fullcalendar.io/releases/main/interaction/main.js'></script>
+</head>
+<body>
+    <h2>Home</h2>
+    <div id='calendar'></div>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: [ 'dayGrid', 'interaction' ],
+            events: {{ events|safe }},
+        });
+        calendar.render();
+    });
+    </script>
+</body>
+</html>

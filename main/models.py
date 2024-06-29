@@ -39,3 +39,8 @@ class Post(models.Model):
 
     def user_has_liked(self, user):
         return self.likes.filter(id=user.id).exists()
+
+class ClassTest(models.Model):
+    test_name = models.CharField(max_length=100)
+    test_date = models.DateField()
+    related_class = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='classtests')
