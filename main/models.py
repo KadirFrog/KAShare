@@ -33,6 +33,7 @@ class ClassTest(models.Model):
         return self.test_name
 
 class Post(models.Model):
+    title = models.CharField(max_length=255, default="")
     classtest = models.ForeignKey(ClassTest, on_delete=models.CASCADE, default=None)
     content = models.TextField()
     image = models.ImageField(upload_to='post_images/', blank=True)

@@ -1,8 +1,9 @@
 import json
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.utils.dateformat import DateFormat
 from django.views.decorators.http import require_POST
 
@@ -16,7 +17,7 @@ def signup_view(request):
         print(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('profile')
+            return redirect('home')
         else:
             print(form.errors)
             return render(request, 'signup.html', {'form': form, "errors": form.errors})
@@ -29,7 +30,7 @@ def login_view(request):
         form = CustomAuthenticationForm(request, request.POST)
         if form.is_valid():
             login(request, form.get_user())
-            return redirect('profile')
+            return redirect('home')
     else:
         form = CustomAuthenticationForm()
     return render(request, 'login.html', {'form': form, "errors": form.errors, "logout": False})
@@ -40,10 +41,10 @@ def post(request):
         if form.is_valid():
             post1 = form.save(commit=False)
             post1.author = request.user
-            post1.full_name = f"{request.user.first_name} {request.user.last_name}"
+            post1.full_name = request.user.fullname
             post1.title = f"{post1.classtest.test_name} {post1.full_name}"
             post1.save()
-            return redirect('profile')
+            return redirect('home')
     else:
         form = PostForm()
     return render(request, 'post.html', {'form': form, "errors": form.errors})
@@ -56,7 +57,10 @@ def profile(request):
 
 def logout_view(request):
     logout(request)
-    return redirect('login', {"logout": True})
+    url = reverse('login')
+    response = HttpResponseRedirect(url)
+    response.set_cookie('logout', 'True')
+    return response
 
 
 @login_required
