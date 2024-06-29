@@ -1,5 +1,21 @@
 <!DOCTYPE html>
 {% include "header.html" %}
+<script>
+function previewImage(event) {
+    var output = document.getElementById('imagePreview');
+    output.innerHTML = ''; // clear the preview area
+    var files = event.target.files;
+    for (var i = 0; i < files.length; i++) {
+        var reader = new FileReader();
+        reader.onload = (function(file) {
+            return function(e) {
+                output.innerHTML += '<img src="' + e.target.result + '"><br>';
+            };
+        })(files[i]);
+        reader.readAsDataURL(files[i]);
+    }
+}
+</script>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,20 +24,24 @@
 <body>
 {{ errors }}
     <center>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <h2>Post a classtest</h2>
-            {{ form.classtest.label_tag }}
-            {{ form.classtest }}
-            <br><br>
-            {{ form.content.label_tag }}
-            {{ form.content }}
-            <br><br>
-            {{ form.image.label_tag }}
-            {{ form.image }}
-            <br><br>
-            <button type="submit" class="box-button">Post</button>
-        </form>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h2>Post a classtest</h2>
+    {{ form.classtest.label_tag }}
+    {{ form.classtest }}
+    <br><br>
+    {{ form.content.label_tag }}
+    {{ form.content }}
+    <br><br>
+    {{ formset.management_form }}
+    {% for form in formset %}
+    {% endfor %}
+    {{ form.image.label_tag }}
+    <input type="file" id="imageInput" name="image[]" accept="image/*" onchange="previewImage(event)" multiple>
+    <br><br>
+    <button type="submit" class="box-button">Post</button>
+</form>
+<div id="imagePreview"></div>
     </center>
 </body>
 </html>

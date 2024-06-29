@@ -4,7 +4,7 @@ from django.urls import path
 from KAShare import settings
 from main import views
 
-urlpatterns = [path("post", views.post, name="post"),
+urlpatterns = [path("post", views.post_view, name="post"),
                path("", views.home, name="home"),
                path("home", views.home, name="home"),
                path("profile", views.profile, name="profile"),
@@ -16,4 +16,5 @@ urlpatterns = [path("post", views.post, name="post"),
                path("post/<int:post_id>", views.post_detail, name="post_detail"),
                path("post/<int:post_id>/like", views.like_post, name="like_post"),
                path('create_classtest/', views.create_classtest, name='create_classtest'),
+               path('post/<int:post_id>/', views.post_detail, name='post_detail'),
                ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

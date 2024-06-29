@@ -7,8 +7,8 @@ from django.urls import reverse
 from django.utils.dateformat import DateFormat
 from django.views.decorators.http import require_POST
 
-from main.forms import PostForm, CustomRegisterForm, CustomAuthenticationForm, ClassTestForm
-from main.models import Post, ClassTest
+from main.forms import PostForm, CustomRegisterForm, CustomAuthenticationForm, ClassTestForm, ImageFormSet
+from main.models import Post, ClassTest, Image
 
 
 def signup_view(request):
@@ -35,19 +35,24 @@ def login_view(request):
         form = CustomAuthenticationForm()
     return render(request, 'login.html', {'form': form, "errors": form.errors, "logout": False})
 @login_required
-def post(request):
+def post_view(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
-        if form.is_valid():
-            post1 = form.save(commit=False)
-            post1.author = request.user
-            post1.full_name = request.user.fullname
-            post1.title = f"{post1.classtest.test_name} {post1.full_name}"
-            post1.save()
-            return redirect('home')
+        formset = ImageFormSet(request.POST, request.FILES, queryset=Image.objects.none())
+        if form.is_valid() and formset.is_valid():  # Validate the formset here
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
+            for image_form in formset:
+                if image_form.cleaned_data.get('image'):  # Now you can safely access cleaned_data
+                    image = image_form.save(commit=False)
+                    image.post = post
+                    image.save()
+            return redirect('post_detail', post.id)
     else:
         form = PostForm()
-    return render(request, 'post.html', {'form': form, "errors": form.errors})
+        formset = ImageFormSet(queryset=Image.objects.none())
+    return render(request, 'post.html', {'form': form, 'formset': formset})
 
 @login_required
 def profile(request):
@@ -71,7 +76,8 @@ def recent_posts(request):
 @login_required
 def post_detail(request, post_id):
     post = Post.objects.get(id=post_id)
-    return render(request, 'post_detail.html', {'post': post})
+    images = post.images.all()  # Retrieve all images related to the post
+    return render(request, 'post_detail.html', {'post': post, 'images': images})
 
 @login_required
 def like_post(request, post_id):

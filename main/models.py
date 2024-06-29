@@ -50,3 +50,7 @@ class Post(models.Model):
 
     def user_has_liked(self, user):
         return self.likes.filter(id=user.id).exists()
+
+class Image(models.Model):
+    post = models.ForeignKey(Post, related_name='images', on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/')

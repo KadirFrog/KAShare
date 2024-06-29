@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.forms import modelformset_factory
 
 from main.models import *
 
@@ -13,6 +14,7 @@ class CustomRegisterForm(UserCreationForm):
         model = CustomUser
         fields = ('fullname', 'email', 'school_class') + UserCreationForm.Meta.fields
 
+
 class CustomAuthenticationForm(AuthenticationForm):
     class Meta:
         model = CustomUser
@@ -21,7 +23,11 @@ class CustomAuthenticationForm(AuthenticationForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['classtest', 'content', 'image']
+        fields = ['classtest', 'content']
+
+
+ImageFormSet = modelformset_factory(Image, fields=('image',), extra=1)
+
 
 class ClassTestForm(forms.ModelForm):
     class Meta:
