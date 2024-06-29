@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Post a classtest</title>
+</head>
+<body>
+{{ errors }}
+    <center>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <h2>Post a classtest</h2>
+            {{ form.title.label_tag }}
+            {{ form.title }}
+            <br><br>
+            {{ form.content.label_tag }}
+            {{ form.content }}
+            <br><br>
+            {{ form.image.label_tag }}
+            {{ form.image }}
+            <br><br>
+            <button type="submit" class="box-button">Post</button>
+        </form>
+    </center>
+</body>
+</html>

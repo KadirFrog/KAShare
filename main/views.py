@@ -1,4 +1,4 @@
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 
@@ -14,10 +14,10 @@ def signup_view(request):
             return redirect('profile')
         else:
             print(form.errors)
-            return render(request, 'signup.html', {'form': form})
+            return render(request, 'signup.html', {'form': form, "errors": form.errors})
     else:
         form = CustomRegisterForm()
-        return render(request, 'signup.html', {'form': form})
+        return render(request, 'signup.html', {'form': form, "errors": None})
 
 def login_view(request):
     if request.method == 'POST':
@@ -27,21 +27,26 @@ def login_view(request):
             return redirect('profile')
     else:
         form = CustomAuthenticationForm()
-    return render(request, 'login.html', {'form': form})
+    return render(request, 'login.html', {'form': form, "errors": form.errors})
 @login_required
 def post(request):
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('success_url')
+            post1 = form.save(commit=False)
+            post1.author = request.user
+            post1.save()
+            return redirect('profile')
     else:
         form = PostForm()
-    return render(request, 'main/post.html')
+    return render(request, 'post.html', {'form': form, "errors": form.errors})
 
 @login_required
 def profile(request):
     device: str = request.META.get('HTTP_USER_AGENT', '').lower()
     user = request.user
     return render(request, "profile.html", {"device": device, "user": user})
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')

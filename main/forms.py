@@ -18,7 +18,7 @@ class CustomAuthenticationForm(AuthenticationForm):
         model = CustomUser
 
 
-class PostForm(forms.Form):
+class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content', 'image']
