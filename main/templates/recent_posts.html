@@ -1,3 +1,4 @@
+{% load post_filters %}
 <!DOCTYPE html>
 <html lang = "en">
 <head>
@@ -9,19 +10,19 @@
 <body>
 <div class = "container">
 	<h1 class = "my-4">Recent Posts</h1>
-	{% for post in posts %}
-		<div class = "card mb-4">
-			<div class = "card-body">
-				<h2 class = "card-title">{{ post.title }}</h2>
-				<p class = "card-text">{{ post.content|truncatechars:200 }}</p>
-				<a href = "{% url 'post_detail' post.id %}" class = "btn btn-primary">Read More &rarr;</a></div>
-			<div class = "card-footer text-muted">
-				Posted on {{ post.date_posted }} by {{ post.author.username }}
-			</div>
-		</div>
-	{% empty %}
-		<p>No posts available.</p>
-	{% endfor %}
+{% for post in posts %}
+  <div class = "card mb-4">
+   <div class = "card-body">
+    <h2 class = "card-title">{{ post.title }}</h2>
+    <p class = "card-text">{{ post.content|truncatechars:200 }}</p>
+    <a href="{% url 'like_post' post.id %}" class="btn btn-primary {% if post|user_has_liked:user %}btn-danger{% endif %}">Like {{ post.likes.count }}</a>
+    <a href = "{% url 'post_detail' post.id %}" class = "btn btn-primary">Read More &rarr;</a></div>
+   <div class = "card-footer text-muted">
+    Posted on {{ post.date_posted }} by {{ post.author.username }}
+   </div>
+  </div>
+{% empty %}
+{% endfor %}
 </div>
 <!-- Include Bootstrap JS -->
 <script src = "https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
