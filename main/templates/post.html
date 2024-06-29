@@ -10,8 +10,8 @@
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <h2>Post a classtest</h2>
-            {{ form.title.label_tag }}
-            {{ form.title }}
+            {{ form.classtest.label_tag }}
+            {{ form.classtest }}
             <br><br>
             {{ form.content.label_tag }}
             {{ form.content }}

@@ -40,6 +40,8 @@ def post(request):
         if form.is_valid():
             post1 = form.save(commit=False)
             post1.author = request.user
+            post1.full_name = f"{request.user.first_name} {request.user.last_name}"
+            post1.title = f"{post1.classtest.test_name} {post1.full_name}"
             post1.save()
             return redirect('profile')
     else:

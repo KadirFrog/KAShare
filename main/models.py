@@ -23,13 +23,23 @@ class CustomUser(AbstractUser):
 
 CustomUser: CustomUser = get_user_model()
 
+
+class ClassTest(models.Model):
+    test_name = models.CharField(max_length=100)
+    test_date = models.DateField()
+    related_class = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='classtests')
+
+    def __str__(self):
+        return self.test_name
+
 class Post(models.Model):
-    title = models.CharField(max_length=100)
+    classtest = models.ForeignKey(ClassTest, on_delete=models.CASCADE, default=None)
     content = models.TextField()
     image = models.ImageField(upload_to='post_images/', blank=True)
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(CustomUser, related_name='likes', blank=True)
+    full_name = models.CharField(max_length=255, blank=True)
 
     def like_post(self, user):
         if self.user_has_liked(user):
@@ -39,9 +49,3 @@ class Post(models.Model):
 
     def user_has_liked(self, user):
         return self.likes.filter(id=user.id).exists()
-
-class ClassTest(models.Model):
-    test_name = models.CharField(max_length=100)
-    test_date = models.DateField()
-    related_class = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='classtests')
-
