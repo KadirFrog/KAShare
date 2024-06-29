@@ -9,7 +9,7 @@ from main.models import Post
 def signup_view(request):
     if request.method == 'POST':
         form = CustomRegisterForm(request.POST)
-        print(request.POST)  # Add this line
+        print(request.POST)
         if form.is_valid():
             form.save()
             return redirect('profile')
@@ -56,9 +56,15 @@ def logout_view(request):
 @login_required
 def recent_posts(request):
     posts = Post.objects.all().order_by('-date_posted')
-    return render(request, 'recent_posts.html', {'posts': posts})
+    return render(request, 'recent_posts.html', {'posts': posts, 'user': request.user})
 
 @login_required
 def post_detail(request, post_id):
     post = Post.objects.get(id=post_id)
     return render(request, 'post_detail.html', {'post': post})
+
+@login_required
+def like_post(request, post_id):
+    post = Post.objects.get(id=post_id)
+    post.like_post(request.user)
+    return redirect('recent_posts')

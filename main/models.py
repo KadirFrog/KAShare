@@ -30,3 +30,12 @@ class Post(models.Model):
     author = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(auto_now_add=True)
     likes = models.ManyToManyField(CustomUser, related_name='likes', blank=True)
+
+    def like_post(self, user):
+        if self.user_has_liked(user):
+            self.likes.remove(user)
+        else:
+            self.likes.add(user)
+
+    def user_has_liked(self, user):
+        return self.likes.filter(id=user.id).exists()
